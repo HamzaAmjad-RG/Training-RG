@@ -1,0 +1,15 @@
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\bin\Debug\net7.0\type_Systems.exe
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\bin\Debug\net7.0\type_Systems.deps.json
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\bin\Debug\net7.0\type_Systems.runtimeconfig.json
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\bin\Debug\net7.0\type_Systems.dll
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\bin\Debug\net7.0\type_Systems.pdb
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\type_Systems.csproj.AssemblyReference.cache
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\type_Systems.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\type_Systems.AssemblyInfoInputs.cache
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\type_Systems.AssemblyInfo.cs
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\type_Systems.csproj.CoreCompileInputs.cache
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\type_Systems.dll
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\refint\type_Systems.dll
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\type_Systems.pdb
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\type_Systems.genruntimeconfig.cache
+C:\Users\hamza\RiderProjects\training_Type_Systems\type_Systems\obj\Debug\net7.0\ref\type_Systems.dll
