@@ -6,6 +6,7 @@ using System.Data.SqlTypes;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
+using System.Runtime;
 
 //Alias support in C# 12
 //global using BandPass = (int Min, int Max);
@@ -15,7 +16,6 @@ int [] source= {1,2,3,4,5};
 var queryInt= from item in source where item <=4 select item;
 Console.WriteLine(queryInt);
 Console.WriteLine($"Type of QueryInt(Type Var): {queryInt.GetType()}");*/
-
 
 
 /*
@@ -33,6 +33,57 @@ public delegate void MyDelegate(int num);
 
 public delegate int MyDelegate2(int num);
 
+public delegate void DisplayMyName(string name);
+public delegate float OperationDelegate(float a,float b);
+public class Run
+{
+    // TODO
+    public static float ApplyOperation(float a,float b,OperationDelegate method)
+    {
+        return method(a,b);
+    }
+    public static float Add(float a,float b)
+    {
+        return a+b;
+    }
+    public static float Subtract(float a,float b)
+    {
+        return a-b;
+    }
+    public static float Multiply(float a,float b)
+    {
+        return a*b;
+    }
+    public static float Divide(float a,float b)
+    {
+        return a/b;
+    }
+}
+
+public class Run1
+{
+    static Func<float, float, float> Plus = (a,b) => a+b;
+    static Func<float, float, float> Minus = (a,b) => a-b;
+    static Func<float, float, float> Divide = (a,b) => a/b;
+    static Func<float, float, float> Multiply = (a,b) => a*b;
+
+    static public Dictionary<string, Func<float, float, float>> Operators =  new Dictionary<string, Func<float, float, float>>{
+        {"+", Plus},
+        {"-", Minus},
+        {"/", Divide},
+        {"*", Multiply}
+    };
+
+    public static Func<float, float, float>OperationGet(string s)
+    {
+        if (Operators.ContainsKey(s))
+        {
+            return Operators[s];
+        }
+        return null;
+    }
+
+}
 public class LearningDelegates
 {
     public static void MyMethod(int a)
@@ -46,6 +97,11 @@ public class LearningDelegates
         a++;
         a = del(a);
         Console.WriteLine($"A now is: {a}");
+    }
+
+    public void DisplayName(string name)
+    {
+        Console.WriteLine($"Your name is: {name}");
     }
 }
 public class Person
@@ -63,6 +119,56 @@ public interface IAnimal
         Console.WriteLine("The animal eats.");
     }
 }
+
+public delegate void MyEventHandler();
+//Publisher
+public class MyButton
+{
+    public event MyEventHandler click;
+    public void OnCLick()
+    {
+        click();
+    }
+
+}
+
+
+//Subscriber
+public class MySubscriber
+{
+    public void Subscribe()
+    {
+        var btn1 = new MyButton();
+        btn1.click += HandleEvent;
+    }
+    private void HandleEvent()
+    {
+        Console.WriteLine("Click Event Occured");
+    }
+}
+
+delegate void MyArrHandler();
+
+class MyArrayList : ArrayList
+{
+    public event MyEventHandler AddedWithBeep;
+
+    public void OnAddedWithBeep()
+    {
+        if (AddedWithBeep != null)
+        {
+            AddedWithBeep();
+        }
+    }
+
+    public override int Add(object value)
+    {
+        AddedWithBeep();
+        return base.Add(value);
+    }
+
+}
+
 public class Everything
 {
     public enum MyEnum
@@ -72,6 +178,14 @@ public class Everything
 
     static void Main(string[] args)
     {
+        /*MyButton btn1 = new MyButton();
+        btn1.click += MySubscriber.HandleEvent;
+
+        btn1.OnCLick();*/
+
+        Console.WriteLine("----------------------------------------------------------");
+
+
         //var var1 = 2;
         Console.WriteLine("Heyyyy");
         short a = 32767; //Error at 32768
@@ -127,8 +241,8 @@ public class Everything
 
         var p3 = p1 with { X = 1, Y = 4 };
         Console.WriteLine(p3); // output: (1, 4)
-        
-        
+
+
         //Tuples
         (double, int) t1 = (4.5, 2);
         Tuples t2 = new Tuples();
@@ -137,28 +251,28 @@ public class Everything
         Console.WriteLine($"Length of my Name is : {t2.NoOfCharactersInName()}");
 
         //Tuples t3 = new Tuples(name:"Hamza", 2, value:999);
-        
+
         //Named arguments can be in any order.
-        Tuples t3 = new Tuples(id:2,name:"Hamza", value:999);
+        Tuples t3 = new Tuples(id: 2, name: "Hamza", value: 999);
         (int?, string) t4 = t3.GetATuple();
         Console.WriteLine($"Tuple Id: {t4.Item1} \n Tuple Name:{t4.Item2}");
         t4.Item1 = 2123;
         Console.WriteLine($"Tuple Id: {t4.Item1} \n Tuple Name:{t4.Item2}");
 
-            
+
         (int? id, string name) t5 = t3.GetATuple();
         Console.WriteLine($"Tuple Id: {t5.id} \n Tuple Name:{t5.name}");
         var (id, name) = t3.GetATuple();
         Console.WriteLine($"Tuple Id: {id} \n Tuple Name:{name}");
-        
+
         var tt = (Sum: 4.5, Count: 3);
         Console.WriteLine($"Sum of {tt.Count} elements is {tt.Sum}.");
 
         (double Sum, int Count) d = (4.5, 3);
         Console.WriteLine($"Sum of {d.Count} elements is {d.Sum}.");
         //This works only with
-        var (id5,_)= t3.GetATuple();
-        (int? , string _) t7 = t3.GetATuple();
+        var (id5, _) = t3.GetATuple();
+        (int?, string _) t7 = t3.GetATuple();
         Console.WriteLine(t3.val());
         //(string,int?, int?) t8 = t3;
         Math.DisplayNothing();
@@ -167,25 +281,49 @@ public class Everything
         m1.IsEven();
         Console.WriteLine("----------------------------------------------------------------");
         m.DisplayHello();
-        
+
         //Error on Dog.Eat();
         /*Dog dog = new Dog();
         dog.Speak();  // Output: Woof!
         dog.Eat();    // Output: The animal eats.*/
 
-        MyDelegate del1 = new MyDelegate(LearningDelegates.MyMethod);
+
+
+
+        var firstNumbersLessThanSix = numbers.TakeWhile(n => n < 6);
+        Console.WriteLine(string.Join(" ", firstNumbersLessThanSix));
+        //var parse = s => int.Parse(s); // ERROR: Not enough type info in the lambda
+
+        var l1 = new LearningProperties { firstName = "Hamza" };
+        Console.WriteLine(l1.firstName);
+        Console.WriteLine("First Full Name:" + l1.fullName);
+        l1.DisplayFullName();
+        Console.WriteLine("Second Full Name:" + l1.fullName);
+
+        //Indexers
+        var le = new LearningIndexers();
+        le[2] = 12;
+
+        //Delegates and Events
+        var del1 = new MyDelegate(LearningDelegates.MyMethod);
         del1.Invoke(3);
         del1(2);
 
         //Anonymous Methods
-        MyDelegate del2= delegate(int num) { num--; Console.WriteLine($"Decremented Value: {num}");  };
+        MyDelegate del2 = delegate(int num)
+        {
+            num--;
+            Console.WriteLine($"Decremented Value: {num}");
+        };
         del2.Invoke(2);
         del2(2);
 
 
-        LearningDelegates.MyMethod2(delegate(int num) { num--;
+        LearningDelegates.MyMethod2(delegate(int num)
+        {
+            num--;
             return num;
-        },12 );
+        }, 12);
 
         //Lambda Expressions    //Simplified Anonymous Function
 
@@ -212,26 +350,69 @@ public class Everything
         Action<int> del7 = (n1) => Console.WriteLine($"Heyyy n1 is :{n1}");
 
         //Func delegate for reutrn type
-        Func<int,int> del8 = (num) => num * num;
+        Func<int, int> del8 = (num) => num * num;
         //del8 = (_) => 33;
         del6();
         del7(del8(22));
+        LearningDelegates ld1 = new LearningDelegates();
+        DisplayMyName dName1 = new DisplayMyName(ld1.DisplayName);
+        dName1.Invoke("Hamza Ali Amjad");
+
+        List<string> namesList = new List<string>{"Hamza", "Osama", "Atif", "Ahmer", "Azeem" };
+        namesList.RemoveAll(nameStr => nameStr.Contains("i"));
+        Console.Write($"Now the List is: ");
+        foreach (var str in namesList )
+        {
+            Console.Write($"{str} ");
+        }
+
+        //Multicast Delegates
+        // Can add multiple functions using += it will run in sequence and return the 0utput
+        var td1 = new MyTempDel(LearningIndexers.TempFunAdd);
+        td1 += LearningIndexers.TempFunSb;
+        int res=td1.Invoke(23);
+        Console.WriteLine(res);
+
+        int frequency = 1000;
+
+        // Duration of the beep (in milliseconds)
+        int duration = 500;
+
+        // Call the Console.Beep method to produce the beep sound
+        //Console.Beep(frequency, duration);
 
 
-        var firstNumbersLessThanSix = numbers.TakeWhile(n => n < 6);
-        Console.WriteLine(string.Join(" ", firstNumbersLessThanSix));
-        //var parse = s => int.Parse(s); // ERROR: Not enough type info in the lambda
+        var arr1 = new MyArrayList();
+        arr1.AddedWithBeep += (() => Console.Beep(frequency, duration));
+        /*var obj = Console.ReadLine();
+        do
+        {   Console.WriteLine("Enter 0 to end: ");
+            obj = Console.ReadLine();
+            arr1.Add(21);
+        } while (Int32.Parse(obj) != 0);*/
 
-        var l1 = new LearningProperties { firstName = "Hamza" };
-        Console.WriteLine(l1.firstName);
-        Console.WriteLine("First Full Name:" + l1.fullName);
-        l1.DisplayFullName();
-        Console.WriteLine("Second Full Name:" + l1.fullName);
+        Predicate<int> dsa;
 
-        //Indexers
-        var le = new LearningIndexers();
-        le[2] = 12;
+        //LINQ
+        var query = from names in namesList orderby names ascending select names;
+        Console.WriteLine(query);
+        foreach (var n in query)
+        {
+            Console.WriteLine(n);
+        }
+
+        int[] numbers2 = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        var query1 = from nums in numbers2 where nums > 5 orderby nums descending select nums;
+        Math.OddNumbers(numbers2);
+
+
+        UniversityManager um = new UniversityManager();
+        um.MaleStudents();
+        um.AllStudentsFromPUCIT();
+        um.StudentAndUniversities();
     }
+
+    public delegate int MyTempDel(int a);
     public IEnumerable<int> GetSingleDigitNumbers()
     {
         yield return 0;
@@ -247,8 +428,22 @@ public class Everything
     }
 }
 
+
+
 public class LearningIndexers
 {
+    public static int TempFunAdd(int a)
+    {
+        a++;
+        Console.WriteLine(a);
+        return a;
+    }
+    public static int TempFunSb(int a)
+    {
+        a--;
+        Console.WriteLine(a);
+        return a;
+    }
     private int[] _store = new int[3];
     private int[] _st = new int[3];
     public int this[int index]
@@ -462,6 +657,16 @@ public class Math: IAddTwo, IMinusTwo<int>
         Console.WriteLine("Nothing!!");
     }
 
+    public static void OddNumbers(int[] numbers)
+    {
+        Console.WriteLine("Odds: ");
+        IEnumerable<int> oddNumbers = from number in numbers where number % 2 != 0 select number;
+        Console.WriteLine(oddNumbers);
+        foreach (var n in oddNumbers)
+        {
+            Console.WriteLine(n);
+        }
+    }
 
 }
 
@@ -512,4 +717,89 @@ public class Cycle: Motorcycle
     {
         
     }*/
+}
+
+class University
+{
+    public int id { get; set; }
+    public string name { get; set; }
+
+    public void Print()
+    {
+        Console.WriteLine("University {0} with id {1}",name,id);
+    }
+}
+
+class Student
+{
+    public int id { get; set; }
+    public string name { get; set; }
+    public string gender { get; set;}
+    public int Age { get; set; }
+
+    //Foreign key
+    public int universityID { get; set; }
+
+    public void Print()
+    {
+        Console.WriteLine($"Student {name} id {id} gender {gender} Age{Age} UNIID {universityID}");
+    }
+}
+
+class UniversityManager
+{
+    public List<University> universities;
+    public List<Student> students;
+
+    public UniversityManager()
+    {
+        universities = new List<University>();
+        students = new List<Student>();
+
+        universities.Add(new University(){id=22,name = "PUCIT"});
+        universities.Add(new University(){id=23,name = "FAST"});
+        students.Add(new Student(){id =1, name = "HAmza",gender = "Male",Age = 23,universityID = 22});
+        students.Add(new Student(){id =1, name = "Abdul Bari",gender = "Male",Age = 43,universityID = 23});
+        students.Add(new Student(){id =1, name = "Some prodigy kid",gender = "female",Age = 13,universityID = 22});
+
+    }
+
+    public void MaleStudents()
+    {
+        IEnumerable<Student> males = from student in students where student.gender.ToLower() == "male" select student;
+        Console.WriteLine("Males:");
+        foreach (var std in males)
+        {
+            std.Print();
+        }
+    }
+
+    public void AllStudentsFromPUCIT()
+    {
+        IEnumerable<Student> stdPUCIT = from student in students
+            join university in universities on student.universityID equals university.id
+            where university.id == 22
+            select student;
+        Console.WriteLine("PUCIT:");
+        foreach (var std in stdPUCIT)
+        {
+            std.Print();
+        }
+    }
+
+    public void StudentAndUniversities()
+    {
+        var newCollection = from student in students
+            join university in universities on student.universityID equals university.id
+            orderby student.name
+            select new { StudentName = student.name,UniversityName=university.name };
+
+        Console.WriteLine("Collection of Students: ");
+        foreach (var std in newCollection)
+        {
+            Console.WriteLine($"Student {std.StudentName}, from University {std.UniversityName}");
+        }
+
+        newCollection.Where(x => x.StudentName.Contains("a"));
+    }
 }
